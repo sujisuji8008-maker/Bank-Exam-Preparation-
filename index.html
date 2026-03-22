@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#FF6B9D"/>
+<title>🌸 Bank Exam Buddy</title>
+<link rel="manifest" href="manifest.json"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --pink: #FF6B9D;
+  --pink-light: #FFB3CC;
+  --pink-pale: #FFF0F5;
+  --purple: #B56BFF;
+  --purple-light: #E0C3FF;
+  --yellow: #FFD93D;
+  --yellow-light: #FFF3C4;
+  --mint: #6BFFB8;
+  --mint-light: #C3FFE8;
+  --blue: #6BB8FF;
+  --blue-light: #C3E4FF;
+  --orange: #FF9A6B;
+  --orange-light: #FFD9C3;
+  --white: #FFFFFF;
+  --soft-bg: #FFF5F9;
+  --text: #3D2040;
+  --text-soft: #8B6B80;
+  --card-shadow: 0 8px 24px rgba(255,107,157,0.15);
+  --card-shadow-hover: 0 12px 32px rgba(255,107,157,0.25);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--soft-bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(255,107,157,0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 90%, rgba(181,107,255,0.10) 0%, transparent 50%),
+    radial-gradient(circle at 60% 40%, rgba(255,217,61,0.08) 0%, transparent 40%);
+}
+
+/* FLOATING DECO */
+.deco {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  font-size: 22px;
+  opacity: 0.15;
+  animation: float 6s ease-in-out infinite;
+}
+.deco:nth-child(1) { top: 5%; left: 8%; animation-delay: 0s; }
+.deco:nth-child(2) { top: 15%; right: 10%; animation-delay: 1s; font-size: 16px; }
+.deco:nth-child(3) { top: 45%; left: 4%; animation-delay: 2s; font-size: 18px; }
+.deco:nth-child(4) { top: 70%; right: 6%; animation-delay: 0.5s; font-size: 20px; }
+.deco:nth-child(5) { top: 85%; left: 12%; animation-delay: 1.5s; font-size: 14px; }
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(8deg); }
+}
+
+/* HEADER */
+.header {
+  position: relative;
+  z-index: 10;
+  background: linear-gradient(135deg, #FF6B9D 0%, #FF8CC8 50%, #B56BFF 100%);
+  padding: 50px 20px 30px;
+  text-align: center;
+  border-radius: 0 0 32px 32px;
+  box-shadow: 0 8px 32px rgba(255,107,157,0.35);
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -30px; left: -30px;
+  width: 120px; height: 120px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 50%;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -20px; right: -20px;
+  width: 90px; height: 90px;
+  background: rgba(255,255,255,0.10);
+  border-radius: 50%;
+}
+.header-emoji { font-size: 42px; margin-bottom: 6px; display: block; animation: bounce 2s ease-in-out infinite; }
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.header h1 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 28px;
+  color: white;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.header-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+/* DAY WIDGET */
+.day-widget {
+  position: relative;
+  z-index: 10;
+  margin: -18px 16px 0;
+  background: white;
+  border-radius: 20px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--card-shadow);
+  gap: 12px;
+}
+.day-left { flex: 1; }
+.day-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin-bottom: 2px;
+}
+.day-number {
+  font-family: 'Fredoka One', cursive;
+  font-size: 32px;
+  color: var(--pink);
+  line-height: 1;
+}
+.phase-pill {
+  background: linear-gradient(135deg, var(--purple-light), var(--pink-pale));
+  color: var(--purple);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 20px;
+  text-align: center;
+  white-space: nowrap;
+  border: 1.5px solid var(--purple-light);
+}
+.day-controls { display: flex; gap: 8px; align-items: center; }
+.day-btn {
+  width: 36px; height: 36px;
+  border-radius: 12px;
+  border: none;
+  background: var(--pink-pale);
+  color: var(--pink);
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(255,107,157,0.2);
+}
+.day-btn:active { transform: scale(0.92); background: var(--pink); color: white; }
+
+/* PROGRESS WIDGET */
+.progress-widget {
+  position: relative;
+  z-index: 10;
+  margin: 12px 16px 0;
+  background: white;
+  border-radius: 20px;
+  padding: 14px 18px;
+  box-shadow: var(--card-shadow);
+}
+.progress-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.progress-title { font-size: 13px; font-weight: 800; color: var(--text); }
+.progress-nums { font-size: 12px; font-weight: 700; color: var(--pink); }
+.progress-track {
+  background: var(--pink-pale);
+  border-radius: 20px;
+  height: 12px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, var(--pink), var(--purple));
+  transition: width 0.6s cubic-bezier(.4,0,.2,1);
+  position: relative;
+  overflow: hidden;
+}
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%);
+  animation: shimmer 1.8s infinite;
+}
+@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
+.progress-stars { display: flex; gap: 4px; margin-top: 10px; flex-wrap: wrap; }
+.star-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--pink-pale);
+  transition: all 0.3s;
+}
+.star-dot.lit { background: linear-gradient(135deg, var(--yellow), var(--orange)); box-shadow: 0 0 6px rgba(255,217,61,0.6); }
+
+/* QUOTE WIDGET */
+.quote-widget {
+  position: relative;
+  z-index: 10;
+  margin: 12px 16px 0;
+  background: linear-gradient(135deg, var(--yellow-light), #FFF8DC);
+  border-radius: 20px;
+  padding: 14px 18px;
+  border: 1.5px dashed var(--yellow);
+  box-shadow: 0 4px 16px rgba(255,217,61,0.2);
+}
+.quote-emoji { font-size: 20px; margin-bottom: 4px; display: block; }
+.quote-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: #6B4A00;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* SECTION CARDS */
+.sections { padding: 12px 16px 100px; position: relative; z-index: 10; }
+.section-card {
+  background: white;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.2s;
+  animation: popIn 0.4s cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.section-card:nth-child(1) { animation-delay: 0.05s; }
+.section-card:nth-child(2) { animation-delay: 0.10s; }
+.section-card:nth-child(3) { animation-delay: 0.15s; }
+.section-card:nth-child(4) { animation-delay: 0.20s; }
+.section-card:nth-child(5) { animation-delay: 0.25s; }
+.section-card:nth-child(6) { animation-delay: 0.30s; }
+.section-card:nth-child(7) { animation-delay: 0.35s; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  cursor: pointer;
+  gap: 10px;
+  user-select: none;
+}
+.sec-icon-wrap {
+  width: 40px; height: 40px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.sec-info { flex: 1; }
+.sec-title { font-size: 14px; font-weight: 800; color: var(--text); }
+.sec-subtitle { font-size: 11px; font-weight: 600; margin-top: 1px; }
+.sec-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-right: 6px;
+}
+.sec-arrow { font-size: 12px; color: var(--text-soft); transition: transform 0.3s; }
+.section-card.open .sec-arrow { transform: rotate(180deg); }
+
+/* Section colors */
+.sec-morning .sec-icon-wrap { background: linear-gradient(135deg, #FFE0EC, #FFB3CC); }
+.sec-morning .sec-subtitle { color: var(--pink); }
+.sec-morning .sec-badge { background: var(--pink-pale); color: var(--pink); }
+
+.sec-study .sec-icon-wrap { background: linear-gradient(135deg, #E0D4FF, #C3AAFF); }
+.sec-study .sec-subtitle { color: var(--purple); }
+.sec-study .sec-badge { background: var(--purple-light); color: var(--purple); }
+
+.sec-health .sec-icon-wrap { background: linear-gradient(135deg, #C3FFE8, #96FFCF); }
+.sec-health .sec-subtitle { color: #1A9962; }
+.sec-health .sec-badge { background: var(--mint-light); color: #1A9962; }
+
+.sec-midday .sec-icon-wrap { background: linear-gradient(135deg, #FFF3C4, #FFE680); }
+.sec-midday .sec-subtitle { color: #B8860B; }
+.sec-midday .sec-badge { background: var(--yellow-light); color: #B8860B; }
+
+.sec-afternoon .sec-icon-wrap { background: linear-gradient(135deg, #FFD9C3, #FFB896); }
+.sec-afternoon .sec-subtitle { color: #D4520A; }
+.sec-afternoon .sec-badge { background: var(--orange-light); color: #D4520A; }
+
+.sec-night .sec-icon-wrap { background: linear-gradient(135deg, #C3E4FF, #96CCFF); }
+.sec-night .sec-subtitle { color: #1A5A96; }
+.sec-night .sec-badge { background: var(--blue-light); color: #1A5A96; }
+
+.sec-wellness .sec-icon-wrap { background: linear-gradient(135deg, #FFE0EC, #E0D4FF); }
+.sec-wellness .sec-subtitle { color: var(--pink); }
+.sec-wellness .sec-badge { background: var(--pink-pale); color: var(--pink); }
+
+/* TASK ITEMS */
+.section-body { display: none; padding: 0 12px 10px; }
+.section-card.open .section-body { display: block; }
+
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 6px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px dashed rgba(0,0,0,0.06);
+}
+.task-item:last-child { border-bottom: none; }
+.task-item:active { background: var(--pink-pale); }
+.task-item.done { opacity: 0.55; }
+
+.task-check {
+  width: 26px; height: 26px;
+  border-radius: 8px;
+  border: 2.5px solid var(--pink-light);
+  background: white;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.25s cubic-bezier(.4,0,.2,1);
+  margin-top: 1px;
+  font-size: 14px;
+}
+.task-item.done .task-check {
+  background: linear-gradient(135deg, var(--mint), #2ECC71);
+  border-color: #2ECC71;
+  animation: checkPop 0.3s cubic-bezier(.4,0,.2,1);
+}
+@keyframes checkPop {
+  0% { transform: scale(0.7); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.task-body { flex: 1; }
+.task-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.4;
+}
+.task-item.done .task-name { text-decoration: line-through; color: var(--text-soft); }
+.task-tip {
+  font-size: 11.5px;
+  color: var(--text-soft);
+  margin-top: 2px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+.task-time-pill {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--pink);
+  background: var(--pink-pale);
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-top: 4px;
+  display: inline-block;
+  letter-spacing: 0.3px;
+}
+
+/* BOTTOM BAR */
+.bottom-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 100;
+  background: white;
+  border-radius: 24px 24px 0 0;
+  padding: 12px 20px 24px;
+  box-shadow: 0 -4px 24px rgba(255,107,157,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.bottom-info { }
+.bottom-pct {
+  font-family: 'Fredoka One', cursive;
+  font-size: 22px;
+  color: var(--pink);
+  line-height: 1;
+}
+.bottom-label { font-size: 11px; font-weight: 700; color: var(--text-soft); margin-top: 1px; }
+.bottom-actions { display: flex; gap: 10px; }
+.btn-reset {
+  background: var(--pink-pale);
+  color: var(--pink);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  transition: all 0.2s;
+}
+.btn-reset:active { background: var(--pink); color: white; transform: scale(0.96); }
+.btn-expand {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(255,107,157,0.3);
+}
+.btn-expand:active { transform: scale(0.96); }
+
+/* CELEBRATION */
+.celebrate-overlay {
+  position: fixed; inset: 0;
+  background: rgba(61,32,64,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s;
+}
+.celebrate-overlay.show { opacity: 1; pointer-events: all; }
+.celebrate-card {
+  background: white;
+  border-radius: 28px;
+  padding: 36px 28px;
+  text-align: center;
+  max-width: 300px;
+  width: 90%;
+  box-shadow: 0 24px 64px rgba(255,107,157,0.35);
+  transform: scale(0.8) translateY(20px);
+  transition: all 0.4s cubic-bezier(.4,0,.2,1);
+}
+.celebrate-overlay.show .celebrate-card { transform: scale(1) translateY(0); }
+.confetti-row { font-size: 28px; margin-bottom: 8px; animation: wiggle 0.6s ease infinite alternate; }
+@keyframes wiggle { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
+.celebrate-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 28px;
+  color: var(--pink);
+  margin-bottom: 8px;
+}
+.celebrate-msg { font-size: 14px; font-weight: 700; color: var(--text-soft); line-height: 1.6; }
+.celebrate-btn {
+  margin-top: 20px;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  box-shadow: 0 4px 16px rgba(255,107,157,0.35);
+  width: 100%;
+}
+
+/* INSTALL BANNER */
+.install-banner {
+  position: fixed;
+  top: 12px; left: 12px; right: 12px;
+  z-index: 300;
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  color: white;
+  border-radius: 18px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 24px rgba(181,107,255,0.35);
+  transform: translateY(-100px);
+  transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+}
+.install-banner.show { transform: translateY(0); }
+.install-icon { font-size: 28px; flex-shrink: 0; }
+.install-text { flex: 1; }
+.install-title { font-size: 13px; font-weight: 800; }
+.install-sub { font-size: 11px; opacity: 0.85; margin-top: 2px; font-weight: 600; }
+.install-btn {
+  background: white;
+  color: var(--purple);
+  border: none;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  flex-shrink: 0;
+}
+.install-close {
+  background: none; border: none; color: rgba(255,255,255,0.7);
+  font-size: 18px; cursor: pointer; padding: 0; flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- Floating deco -->
+<span class="deco">🌸</span>
+<span class="deco">⭐</span>
+<span class="deco">📚</span>
+<span class="deco">✨</span>
+<span class="deco">💛</span>
+
+<!-- Install Banner -->
+<div class="install-banner" id="installBanner">
+  <span class="install-icon">📲</span>
+  <div class="install-text">
+    <div class="install-title">Install as App!</div>
+    <div class="install-sub">Add to home screen for quick access</div>
+  </div>
+  <button class="install-btn" id="installBtn">Install</button>
+  <button class="install-close" onclick="dismissBanner()">✕</button>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <span class="header-emoji">🏦</span>
+  <h1>Bank Exam Buddy</h1>
+  <div class="header-sub">Your daily study companion 💕</div>
+</div>
+
+<!-- Day Widget -->
+<div class="day-widget">
+  <div class="day-left">
+    <div class="day-label">Today is</div>
+    <div class="day-number" id="dayNum">Day 1</div>
+  </div>
+  <div class="day-controls">
+    <button class="day-btn" onclick="changeDay(-1)">‹</button>
+    <button class="day-btn" onclick="changeDay(1)">›</button>
+  </div>
+  <div class="phase-pill" id="phasePill">🌱 Foundation</div>
+</div>
+
+<!-- Progress Widget -->
+<div class="progress-widget">
+  <div class="progress-top">
+    <div class="progress-title">✨ Today's Progress</div>
+    <div class="progress-nums" id="progressNums">0 / 0</div>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <div class="progress-stars" id="progressStars"></div>
+</div>
+
+<!-- Quote Widget -->
+<div class="quote-widget">
+  <span class="quote-emoji">💌</span>
+  <div class="quote-text" id="quoteText">"I am not just preparing for an exam. I am building a life."</div>
+</div>
+
+<!-- Sections -->
+<div class="sections" id="sections"></div>
+
+<!-- Bottom Bar -->
+<div class="bottom-bar">
+  <div class="bottom-info">
+    <div class="bottom-pct" id="bottomPct">0%</div>
+    <div class="bottom-label">completed today 🌟</div>
+  </div>
+  <div class="bottom-actions">
+    <button class="btn-reset" onclick="resetDay()">↺ Reset</button>
+    <button class="btn-expand" onclick="expandAll()">Expand All</button>
+  </div>
+</div>
+
+<!-- Celebration -->
+<div class="celebrate-overlay" id="celebrateOverlay">
+  <div class="celebrate-card">
+    <div class="confetti-row">🎉✨🌟💫🎊</div>
+    <div class="celebrate-title">Amazing!!</div>
+    <div class="celebrate-msg">You completed every task today!<br>You are absolutely unstoppable. 💪<br>Your future self is so proud of you! 🌸</div>
+    <button class="celebrate-btn" onclick="closeCelebrate()">Keep Going! →</button>
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {
+    id:'morning', label:'Morning Rituals', icon:'🌸', cls:'sec-morning', time:'4:00–5:00 AM',
+    tasks:[
+      {name:'Wake up at 4:00 AM sharp', tip:'Rise and shine! Your future starts now ✨', time:'4:00 AM'},
+      {name:'Drink 2 glasses of warm water', tip:'Flushes toxins, activates the brain 💧', time:'4:00 AM'},
+      {name:'20-min brisk walk or stretching', tip:'Boosts memory by 20%! 🏃', time:'4:20 AM'},
+      {name:'5-min deep breathing meditation', tip:'Breathe in 4, hold 4, out 4. Calm focus 🧘', time:'4:40 AM'},
+    ]
+  },
+  {
+    id:'study1', label:'Peak Study Block', icon:'🧠', cls:'sec-study', time:'5:00–7:00 AM',
+    tasks:[
+      {name:'Speed Maths — Vedic tricks & shortcuts', tip:'Mind is SHARPEST now — hardest subject first! 🔢', time:'5:00 AM'},
+      {name:'Quantitative Aptitude practice', tip:'Time yourself. Speed + accuracy together 📊', time:'6:00 AM'},
+    ]
+  },
+  {
+    id:'breakfast', label:'Breakfast & Freshen Up', icon:'🍳', cls:'sec-health', time:'7:00–8:00 AM',
+    tasks:[
+      {name:'Protein breakfast — eggs / banana / nuts / oats', tip:'No tea on empty stomach. Fuel that brain! 🥚', time:'7:00 AM'},
+      {name:'Freshen up & get ready', tip:'Feel fresh = study fresh 🚿', time:'7:30 AM'},
+    ]
+  },
+  {
+    id:'midstudy', label:'Morning Study Block', icon:'📖', cls:'sec-midday', time:'8:00 AM–1:00 PM',
+    tasks:[
+      {name:'Current Affairs — 30 min, 1 source only', tip:'Bankersadda/AffairsCloud. Write 5 key points! 📰', time:'8:00 AM'},
+      {name:'English — RC, grammar, vocabulary', tip:'Read aloud — use your narrating gift! 🗣️', time:'9:00 AM'},
+      {name:'Reasoning — puzzles & syllogisms', tip:'Slow first, then build speed 🧩', time:'10:00 AM'},
+      {name:'Banking Awareness / Static GK', tip:'RBI, HQs, currencies. 1 flashcard per fact 🏦', time:'11:00 AM'},
+      {name:'Light nutritious lunch', tip:'No heavy oily food — it causes afternoon crash 🥗', time:'12:00 PM'},
+      {name:'⏰ Power Nap — EXACTLY 20 minutes!', tip:'Set alarm NOW! Restores alertness 100% 😴', time:'1:00 PM'},
+      {name:'Light GK review — morning notes only', tip:'No new topics! Let the nap-fresh brain absorb 🌟', time:'1:20 PM'},
+    ]
+  },
+  {
+    id:'afternoon', label:'Afternoon Power Hours', icon:'⚡', cls:'sec-afternoon', time:'2:00–6:30 PM',
+    tasks:[
+      {name:'Quant + Reasoning mixed questions', tip:'Full energy restored. Track your score! 💪', time:'2:00 PM'},
+      {name:'English / GK deep study with story links', tip:'Link facts to movie scenes — cinematic memory! 🎬', time:'3:00 PM'},
+      {name:'Reasoning speed-building — prev year Qs', tip:'Track daily score. Celebrate improvement 🏆', time:'4:00 PM'},
+      {name:'Break + light snack + 10-min walk', tip:'Fruits or nuts only. Fully refresh 🍌', time:'5:00 PM'},
+      {name:'Weak Area Focus — hardest subject this week', tip:'Your golden hour. Give it everything 🌟', time:'5:30 PM'},
+      {name:'Family time & household', tip:'Guilt-free. The brain NEEDS this 💕', time:'6:30 PM'},
+      {name:'Light dinner by 7:30 PM', tip:'Lightest meal = better sleep = better memory 🌙', time:'7:00 PM'},
+    ]
+  },
+  {
+    id:'night', label:'Night Study & Wind Down', icon:'🌙', cls:'sec-night', time:'7:30–9:30 PM',
+    tasks:[
+      {name:'English / Reasoning evening practice', tip:'Moderate intensity. Stay consistent 📝', time:'7:30 PM'},
+      {name:'Full Day Revision — write 3 learned + 3 to improve', tip:'Writing = 3 brain parts active. Retention +60%! ✍️', time:'8:30 PM'},
+      {name:'Wind down — no screens, journal thoughts', tip:'Prepare your mind for powerful sleep 🌸', time:'9:00 PM'},
+    ]
+  },
+  {
+    id:'wellness', label:'Daily Wellness Rules', icon:'💧', cls:'sec-wellness', time:'All Day',
+    tasks:[
+      {name:'8–10 glasses of water', tip:'Keep a bottle on study desk always 💧', time:'All day'},
+      {name:'No junk — fruits & nuts as snacks only', tip:'Banana, almonds, walnuts. No biscuits 🚫', time:'All day'},
+      {name:'No phone 30 min before sleep', tip:'Blue light kills melatonin = ruins memory 📵', time:'Before 9 PM'},
+      {name:'Sleep by 9:30 PM — 6.5 hrs', tip:'Memory is BUILT during sleep. Non-negotiable 💤', time:'9:30 PM'},
+    ]
+  },
+];
+
+const QUOTES = [
+  "I am not just preparing for an exam. I am building a life.",
+  "My memory is not broken. My gifts are not gone. I am just getting started.",
+  "Today I will show up. That is enough.",
+  "I chose this path out of love for my family. That love is my strength.",
+  "Consistency beats intensity — show up every single day.",
+  "Your gifts don't have to die because they aren't your career.",
+  "Go after this with everything you have. 💪",
+  "Every task done today is a brick in your future. Keep building! 🏗️",
+  "Small steps every day. Big results every month. 🌟",
+  "You are not behind. You are exactly where you need to be.",
+];
+
+const PHASES = [
+  {range:[1,30], label:'🌱 Foundation'},
+  {range:[31,70], label:'🏗️ Building'},
+  {range:[71,110], label:'🚀 Acceleration'},
+  {range:[111,130], label:'🔥 Final Push'},
+];
+
+let day = parseInt(localStorage.getItem('bd_day')||'1');
+let checks = JSON.parse(localStorage.getItem('bd_checks')||'{}');
+let deferredPrompt = null;
+let allExpanded = false;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  setTimeout(() => document.getElementById('installBanner').classList.add('show'), 1500);
+});
+
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  dismissBanner();
+  deferredPrompt = null;
+});
+
+function dismissBanner() {
+  document.getElementById('installBanner').classList.remove('show');
+}
+
+function getPhase(d) {
+  for (const p of PHASES) if (d >= p.range[0] && d <= p.range[1]) return p.label;
+  return '🔥 Final Push';
+}
+
+function key(sid, i) { return `d${day}_${sid}_${i}`; }
+
+function changeDay(delta) {
+  const nd = Math.max(1, Math.min(130, day + delta));
+  if (nd !== day) { day = nd; save(); render(); }
+}
+
+function toggle(sid, idx) {
+  const k = key(sid, idx);
+  checks[k] = !checks[k];
+  save();
+  const el = document.querySelector(`[data-k="${k}"]`);
+  if (el) {
+    el.classList.toggle('done', checks[k]);
+    el.querySelector('.task-check').textContent = checks[k] ? '✓' : '';
+  }
+  updateProgress();
+  if (checks[k]) {
+    const { total, done } = countTasks();
+    if (done === total) setTimeout(() => document.getElementById('celebrateOverlay').classList.add('show'), 400);
+  }
+}
+
+function countTasks() {
+  let total = 0, done = 0;
+  DATA.forEach(s => s.tasks.forEach((_, i) => {
+    total++;
+    if (checks[key(s.id, i)]) done++;
+  }));
+  return { total, done };
+}
+
+function updateProgress() {
+  const { total, done } = countTasks();
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById('progressNums').textContent = `${done} / ${total}`;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('bottomPct').textContent = pct + '%';
+
+  // Stars
+  const stars = document.getElementById('progressStars');
+  const totalDots = Math.min(total, 25);
+  stars.innerHTML = '';
+  for (let i = 0; i < totalDots; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'star-dot' + (i < Math.round(done / total * totalDots) ? ' lit' : '');
+    stars.appendChild(dot);
+  }
+
+  // Update section badges
+  DATA.forEach(s => {
+    const sDone = s.tasks.filter((_, i) => checks[key(s.id, i)]).length;
+    const badge = document.querySelector(`[data-sec="${s.id}"] .sec-badge`);
+    if (badge) badge.textContent = `${sDone}/${s.tasks.length}`;
+  });
+}
+
+function resetDay() {
+  if (!confirm('Reset all tasks for today? 🥺')) return;
+  DATA.forEach(s => s.tasks.forEach((_, i) => delete checks[key(s.id, i)]));
+  save();
+  render();
+}
+
+function expandAll() {
+  allExpanded = !allExpanded;
+  document.querySelectorAll('.section-card').forEach(c => c.classList.toggle('open', allExpanded));
+  document.querySelector('.btn-expand').textContent = allExpanded ? 'Collapse' : 'Expand All';
+}
+
+function closeCelebrate() {
+  document.getElementById('celebrateOverlay').classList.remove('show');
+}
+
+function save() {
+  localStorage.setItem('bd_day', day);
+  localStorage.setItem('bd_checks', JSON.stringify(checks));
+}
+
+function render() {
+  document.getElementById('dayNum').textContent = `Day ${day}`;
+  document.getElementById('phasePill').textContent = getPhase(day);
+  document.getElementById('quoteText').textContent = `"${QUOTES[(day - 1) % QUOTES.length]}"`;
+
+  const container = document.getElementById('sections');
+  container.innerHTML = '';
+
+  DATA.forEach((sec, si) => {
+    const doneCnt = sec.tasks.filter((_, i) => checks[key(sec.id, i)]).length;
+    const card = document.createElement('div');
+    card.className = `section-card ${sec.cls}${si === 0 ? ' open' : ''}`;
+    card.setAttribute('data-sec', sec.id);
+    card.style.animationDelay = (si * 0.05 + 0.05) + 's';
+
+    card.innerHTML = `
+      <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="sec-icon-wrap">${sec.icon}</div>
+        <div class="sec-info">
+          <div class="sec-title">${sec.label}</div>
+          <div class="sec-subtitle">${sec.time}</div>
+        </div>
+        <span class="sec-badge">${doneCnt}/${sec.tasks.length}</span>
+        <span class="sec-arrow">▼</span>
+      </div>
+      <div class="section-body">
+        ${sec.tasks.map((t, i) => {
+          const k = key(sec.id, i);
+          const done = !!checks[k];
+          return `<div class="task-item${done ? ' done' : ''}" data-k="${k}" onclick="toggle('${sec.id}',${i})">
+            <div class="task-check">${done ? '✓' : ''}</div>
+            <div class="task-body">
+              <div class="task-name">${t.name}</div>
+              <div class="task-tip">${t.tip}</div>
+              <span class="task-time-pill">⏰ ${t.time}</span>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    container.appendChild(card);
+  });
+
+  updateProgress();
+}
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+render();
+</script>
+</body>
+</html>
